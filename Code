@@ -1,0 +1,170 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\title{Abgabe 1 für Computergestützte Methoden}
+\author{ Gruppe 80, Thomas Müller, Jonas Stupperich, Hakan Zorlu}
+\date{02.12.2024}
+\usepackage[hidelinks]{hyperref}
+\begin{document}
+
+
+\maketitle Inhaltsverzeichnis 
+\tableofcontents
+\setcounter{section}{1}
+\setcounter{subsection}{0}
+\setcounter{subsubsection}{0}
+
+
+\addcontentsline{toc}{section}{Aufgabe 1}
+\addcontentsline{toc}{subsection}{Datenverarbeitung}
+
+\newpage
+\subsection{Datenanalyse}
+Der Datensatz enthält tägliche Wetter- und Aktivitätsdaten für die Station „Suffolk St & Stanton St“ im Jahr 2023. Er besteht aus mehreren Spalten, darunter das Datum, der Wochentag, der Monat sowie verschiedene meteorologische Werte wie Niederschlag, Windgeschwindigkeit und Temperaturen (min, durchschnittlich, maximal). Zusätzlich gibt es eine Spalte mit einer Zählung (count), die vermutlich die Anzahl von Aktivitäten oder Ereignissen an jedem Tag anzeigt. Die Daten zeigen typische saisonale Schwankungen bei Temperaturen und Niederschlägen, wobei zu Beginn des Jahres die Temperaturen relativ niedrig sind. Es gibt sowohl Tage ohne Niederschlag als auch Tage mit gemessenem Regen. Einige Werte, wie die durchschnittliche Temperatur oder die Windgeschwindigkeit, fehlen an bestimmten Tagen (gekennzeichnet durch „NA“). Dies könnte auf unvollständige Messungen oder fehlende Daten hinweisen. Die Zählung (count) variiert stark und scheint mit unterschiedlichen Ereignissen oder Aktivitäten zusammenzuhängen, die an den jeweiligen Tagen stattgefunden haben. Diese Schwankungen könnten durch verschiedene Wetterbedingungen und den jeweiligen Tag im Jahr beeinflusst worden sein. Insgesamt ermöglicht der Datensatz interessante Einblicke in die Beziehung zwischen Wetterbedingungen und den damit verbundenen Aktivitäten an der Station. Weitere Analysen wären nötig, um genauere saisonale und wetterbedingte Muster zu identifizieren.
+
+\subsection{Import der Daten}
+Wir haben uns für die Tabellenkalkulation in Excel entschieden.
+
+\FloatBarrier
+\begin{figure} [h]
+    \centering
+    \includegraphics[width=1\linewidth]{Bildschirmfoto 2024-11-22 um 17.54.21.jpeg}
+    \caption{Import}
+    \label{fig:enter-label}
+\end{figure}
+\FloatBarrier
+
+\subsection{Berechnung}
+ Zunächst haben wir die relevanten Daten der Suffolk St & Stanton St in Excel eingefügt. Anschließend haben wir die Daten strukturiert, indem wir die gewünschten Angaben markiert haben, auf den Reiter ‘Daten’ geklickt und die Option ‘Text in Spalten’ gewählt haben. Durch die Auswahl der Trennoption bei jedem Komma wurden die Daten ordentlich und übersichtlich in der Tabelle dargestellt.
+Um die höchste mittlere Temperatur zu ermitteln, haben wir im Reiter ‘Daten’ die Option ‘Sortieren’ genutzt. Dabei haben wir die Spalte ‘average.temperature’ ausgewählt und die Werte in absteigender Reihenfolge sortiert. Das Ergebnis zeigt, dass der 28.07.23 mit 83 Fahrenheit die höchste Temperatur aufwies.
+In der Funktionszeile haben wir die Formel =UMWANDELN(83;“F”;“C”) eingegeben, um die Temperatur von Fahrenheit in Celsius umzuwandeln. Das Ergebnis war 28,33333333 °C.
+
+
+\setcounter{section}{2}
+\setcounter{subsection}{0}
+\setcounter{subsubsection}{0}
+
+
+
+\addcontentsline{toc}{subsection}{Datenhaltung} 
+\subsection{Überblick SQLite}
+Als wir uns mit SQLite befassten, merkten wir das es sich hier um eine kompakte Datenbank-Engine handelt ohne Serverkomponente. Es gibt verschiedene Datentypen, die es bei der Erstellung von Tabellen ermöglichen unterschiedliche Arten von Daten zu repräsentieren. „INTEGER“ dient dem Speichern von Ganzzahlen ohne Dezimalstellen, während „REAL“ für Fließkommazahlen verwendet wird. Außerdem dient „TEXT“ dazu Zeichenketten & Textdaten zu speichern und „BLOB“ Bilder & Dateien im Binärformat aufzubewahren, was sehr nützlich bei der Erstellung von Tabellen sein kann.
+\subsection{Datenbankschema entwerfen}
+Wie man erkennen kann, ist die erste Normalform unter Bikeshare () und die zweite unter Share (), station () und weather (). Dadurch das die zweite Normalform zutrifft ist die erste Normalform auch zutreffend.
+
+\FloatBarrier
+\begin{figure} [h]
+    \centering
+    \includegraphics[width=1\linewidth]{Bildschirmfoto 2024-11-26 um 12.20.07.jpeg}
+    \label{fig:enter-label}
+    \vspace{0cm} %minimaler vertikaler Abstand
+    \centering
+    \includegraphics[width=1\linewidth]{Bildschirmfoto 2024-11-26 um 12.20.11.jpeg}
+    \caption{Datenbankschema}
+    \label{fig:enter-label}
+\end{figure}
+\FloatBarrier
+
+
+\newpage
+\subsection{Definieren der Tabellen mit DDL}
+Mit diesem SQL-DDL-Statement erstellen wir eine Tabelle names „BikeShare“ mit den angegebenen Datentypen und Spalten. Die Primärschlüssel liegen auf „station“ und „date“ damit jede Zeile in der BikeShare-Tabelle eindeutig durch das Datum und die Station identifiziert wird.
+
+\FloatBarrier
+\begin{figure} [h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Bild 26.11.24 um 11.50.jpeg}
+    \caption{DDL-Teil mit SQL}
+    \label{fig:enter-label}
+\end{figure}
+\FloatBarrier
+
+\subsection{Importieren der Datensätze}
+Nachdem korrekten Anlegen der Tabellen in Excel müssen wir den Datensatz in SQL importieren. Dafür haben wir bei Excel mit Hilfe des Befehls „Suchen & Ersetzen“ alle Anführungsstriche enfernt, sodass alle Spaltennamen sowie Werte der Tabelle nur durch ein Komma und einzelnen Reihen durch ein Newline-Character getrennt sind. Dies vereinfacht das Importieren in die SQL Tabelle erheblich.
+
+\FloatBarrier
+\begin{figure} [h]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Bild 29.11.24 um 18.33.jpeg}
+    \caption{Import Excel}
+    \label{fig:enter-label}
+\end{figure}
+\FloatBarrier
+
+\newpage
+
+\subsection{Berechnung anhand SQL}
+Hier haben wir unsere Tabelle etwas modifiziert, dem Ganzen die Spaltenüberschriften wie in Excel verpasst und konnten somit die höchste mittlere Temperatur berechnen.
+
+\FloatBarrier
+\begin{figure} [h]
+    \centering
+    \includegraphics[width=1\linewidth]{Bild 26.11.24 um 13.13.jpeg}
+    \caption{Berechnung mit SQL}
+    \label{fig:enter-label}
+\end{figure}
+\FloatBarrier
+
+
+\subsection{Quellenangaben}
+
+\url{https://www.sqliteonline.com}
+
+\url{https://www.sqlite.org}
+
+\url{https://www.dataquest.io/blog/sql-commands/}
+
+\url{https://www.ionos.de/digitalguide/hosting/hosting-technik/normalisierung-von-datenbanken/}
+
+\url{https://www.overleaf.com/learn/latex/Commands}
+
+
+
+\newpage
+
+\section{Der ZGWS}
+\subsection{Der zentrale Grenzwertsatz}
+Der zentrale Grenzwertsatz (ZGS) ist ein fundamentales Resultat der Wahr-
+scheinlichkeitstheorie, das die Verteilung von Summen unabhängiger, identisch
+verteilter (i.i.d.) Zufallsvariablen (ZV) beschreibt. Er besagt, dass unter be-
+stimmten Voraussetzungen die Summe einer großen Anzahl solcher ZV annähernd
+normalverteilt ist, unabhängig von der Verteilung der einzelnen ZV. Dies ist be-
+sonders nützlich, da die Normalverteilung gut untersucht und mathematisch
+handhabbar ist.
+
+\subsection{Aussage}
+Sei $X_1, X_2, \dots, X_n$ eine Folge von i.i.d. Zufallsvariablen (ZV) mit dem Erwartungswert $\mu = \mathbb{E}(X_i)$ und der Varianz $\sigma^2 = \text{Var}(X_i)$, wobei $0 < \sigma^2 < \infty$ gelte. Dann konvergiert die standardisierte Summe $Z_n$ dieser ZV für $n \to \infty$ in Verteilung gegen eine Standardnormalverteilung:
+
+\begin{equation}
+Z_n = \frac{\sum_{i=1}^n X_i - n\mu}{\sigma\sqrt{n}} \xrightarrow{d} N(0,1).
+\end{equation}
+Das bedeutet, dass für große n die Summe der ZV näherungsweise normalverteilt ist mit Erwwartungswert $n\mu$ und die Varianz $n\sigma^2$:
+
+\begin{equation}
+\sum_{i=1}^n X_i \sim N(n\mu, n\sigma^2).
+\end{equation}
+
+\subsection{Erklärung der Standardisierung}
+Um die Summe der Zufallsvariablen (ZV) in eine Standardnormalverteilung zu transformieren, subtrahiert man den Erwartungswert $n\mu$ und teilt durch die Standardabweichung $\sigma\sqrt{n}$. Dies führt zu der obigen Formel (1). Die Darstellung (2) ist für $n \to \infty$ nicht wohldefiniert.
+
+
+
+
+
+
+
+
+\subsection{Anwendungen}
+Der ZGS wird in vielen Bereichen der Statistik und der Wahrscheinlichkeits-
+theorie angewendet. Typische Beispiele sind:
+
+
+\begin{itemize}
+    \item \textbf{Statistische Stichprobenanalyse:} Der Zentrale Grenzwertsatz ermöglicht es, Stichprobenmittelwerte aus einer Grundgesamtheit zu verwenden, um Konfidenzintervalle und Hypothesentests durchzuführen, selbst wenn die Grundgesamtheit nicht normalverteilt ist.
+    \item \textbf{Fehlermanagement in Maschinenlernen:} In Algorithmen des Maschinenlernens, wie z. B. beim Training neuronaler Netze, können die durchschnittlichen Fehler in den Gewichten oder Vorhersagen durch den ZGS als normalverteilt angenommen werden, was die Analyse vereinfacht.
+\end{itemize}
+
+
+
+
+
+\end{document}
